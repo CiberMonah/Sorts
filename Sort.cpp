@@ -1,5 +1,11 @@
 #include "Sort.h"
 
+
+void gen_arr_int(int* arr, int size_, int min_value, int max_value) {
+    for(int i = 0; i < size_; i++)
+        arr[i] = min_value + (rand() % (max_value - min_value + 1));
+}
+
 static void swap_int(int *a, int *b) {
     int temp = *b;
     *b = *a;
@@ -53,35 +59,48 @@ void print_int_arr(int* a, int nums) {
 static int partition_(int data[], int left, int right) {
     //int pivot = data[(left + right) / 2]; - mid pivot
     int pivot = data[rand() % (right - left)];  // - rand pivot
-
-    /*printf("pivot = %d\n", pivot);
-    printf("left = %d right = %d\n", left, right); to output iteration info
-*/
-
     int i = left, j = right;
+    /*printf("Part of sort\n");
+    print_int_arr(data + left, right - left + 1);*/
 
     while(true) {
-        while(data[i] < pivot) i = i + 1;
-        while(data[j] > pivot) j = j - 1;
+        while(data[i] < pivot) i++;
+        while(data[j] > pivot) j--;
         if(i >= j) return j;
-        /*printf("to swap 1 - %d, 2 - %d\n", data[i], data[j]);
-        print_int_arr(data, 10);*/
         swap_int(&data[i++], &data[j--]);
     }
 }
 
+int it = 0;
 
-//int iteration = 0;
+/*static void sort_3_int(int data[]) {
+    if (data[0] > data[2])
+        swap_int(&data[0], &data[2]);
+    if (data[0] > data[1])
+        swap_int(&data[0], &data[1]);
+    if (data[1] > data[2])
+        swap_int(&data[1], &data[2]);
+}*/
 
 void quick_sort_int(int data[], int left, int right) {
+    if (right - left == 1 && data[right] < data[left]) {
+        swap_int(&data[left], &data[right]);
+        return;
+        }
+    /*else if (right - left == 2) {
+        sort_3_int(data);
+    }*/
 
-    if(left < right && right - left > 1) {
-        //print_int_arr(data, 10);
+    else if (left < right && right - left > 1) {
         int p = partition_(data, left, right);
-        //iteration++;
-        /*if(iteration == 100)     to avoid inf loop
-            _Exit (EXIT_SUCCESS);*/
+        //print_int_arr(data, 13);  //print array in i if len == 10
+        if(it == 10000) {     //to avoid inf loop
+            printf("To many iterations");
+            _Exit (EXIT_SUCCESS);
+            }
+        //printf("pivo - %d\n", p);
+        it++;
         quick_sort_int(data, left, p);
-        quick_sort_int(data, p, right);
+        quick_sort_int(data, p + 1, right);
     }
 }
